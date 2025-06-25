@@ -17,6 +17,7 @@ const MyChat = () => {
     const myChat = useSelector((store) => store.myChat.chat);
     const authUserId = useSelector((store) => store?.auth?._id);
     const selectedChat = useSelector((store) => store?.myChat?.selectedChat);
+    const onlineUsers = useSelector((s) => s.onlineUsers);
     const isChatLoading = useSelector(
         (store) => store?.condition?.isChatLoading
     );
@@ -75,6 +76,8 @@ const MyChat = () => {
                             </div>
                         )}
                         {myChat?.map((chat) => {
+                             const chatUser = chat.users.find((u) => u._id !== authUserId);
+                             const isOnline = onlineUsers.includes(chatUser._id);
                             return (
                                 <div
                                     key={chat?._id}
@@ -92,8 +95,11 @@ const MyChat = () => {
                                         src={getChatImage(chat, authUserId)}
                                         alt="img"
                                     />
+                                    
                                     <div className="w-full">
                                         <div className="flex justify-between items-center w-full">
+                                            <span  className={`h-2 w-2 rounded-full 
+                                                ${isOnline ? "bg-green-500" : "bg-gray-500"}`}/>
                                             <span className="line-clamp-1 capitalize">
                                                 {getChatName(chat, authUserId)}
                                             </span>

@@ -20,6 +20,7 @@ import { PiUserCircleLight } from "react-icons/pi";
 
 const Header = () => {
 	const user = useSelector((store) => store.auth);
+	const onlineUsers = useSelector((store) => store.onlineUsers);
 	const isHeaderMenu = useSelector((store) => store?.condition?.isHeaderMenu);
 	const newMessageRecieved = useSelector(
 		(store) => store?.myChat?.newMessageRecieved
@@ -114,6 +115,9 @@ const Header = () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [isHeaderMenu]);
+		const chatUser = user?._id;
+        const isOnline = onlineUsers.includes(chatUser);
+                          
 	return (
 		<div
 			id="header"
@@ -133,6 +137,7 @@ const Header = () => {
 			</div>
 
 			{user ? (
+				 		 
 				<div className="flex flex-nowrap items-center">
 					<span
 						className={`whitespace-nowrap ml-2 flex items-center justify-center relative mr-1.5 cursor-pointer ${
@@ -164,6 +169,9 @@ const Header = () => {
 							alt="gg"
 							className="w-10 h-10 rounded-full"
 						/>
+						<span  className={`h-2 w-2 rounded-full 
+                                                ${isOnline ? "bg-green-500" : "bg-gray-500"}`}/>
+                                           
 						<span className="m-2">
 							{isHeaderMenu ? (
 								<MdKeyboardArrowDown fontSize={20} />

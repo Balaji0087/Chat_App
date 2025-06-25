@@ -14,6 +14,7 @@ import socket from "../../socket/socket";
 
 const UserSearch = () => {
 	const dispatch = useDispatch();
+	const onlineUsers = useSelector((s) => s.onlineUsers);
 	const isChatLoading = useSelector(
 		(store) => store?.condition?.isChatLoading
 	);
@@ -122,6 +123,9 @@ const UserSearch = () => {
 							</div>
 						)}
 						{selectedUsers?.map((user) => {
+							 const chatUser = user?._id;
+                             const isOnline = onlineUsers.includes(chatUser);
+                           
 							return (
 								<div
 									key={user?._id}
@@ -133,7 +137,10 @@ const UserSearch = () => {
 										src={user?.image}
 										alt="img"
 									/>
-									<div className="w-full">
+									<span  className={`h-2 w-2 rounded-full 
+                                                ${isOnline ? "bg-green-500" : "bg-gray-500"}`}/>
+                                           
+									<div className="w-full"> 
 										<span className="line-clamp-1 capitalize">
 											{user?.firstName} {user?.lastName}
 										</span>

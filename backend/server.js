@@ -47,6 +47,7 @@ app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
 
+
 // Invaild routes
 app.all("*", (req, res) => {
 	res.json({ error: "Invaild Route" });
@@ -70,7 +71,10 @@ const io = new Server(server, {
 	transports: ["websocket"],
 	cors: corsOptions,
 });
-
+const onlineUsers = new Map();
+function broadcastPresence() {
+  io.emit("online-users", [...onlineUsers.keys()]); // easy: array of userIds
+}
 // Socket connection
 io.on("connection", (socket) => {
 	console.log("Connected to socket.io:", socket.id);
@@ -80,6 +84,10 @@ io.on("connection", (socket) => {
 		if (!socket.hasJoined) {
 			socket.join(userId);
 			socket.hasJoined = true;
+			socket.userId = userId; 
+			/* 🔥 NEW —- add to presence map */
+      		onlineUsers.set(userId, socket.id);
+    		broadcastPresence();
 			console.log("User joined:", userId);
 			socket.emit("connected");
 		}
@@ -89,6 +97,9 @@ io.on("connection", (socket) => {
 		chat?.users.forEach((user) => {
 			if (user._id === newMessageReceived.sender._id) return;
 			console.log("Message received by:", user._id);
+			const recipientSocketId = onlineUsers.get(user._id);
+      		if (recipientSocketId)
+        		io.to(recipientSocketId).emit("message received", msg);
 			socket.in(user._id).emit("message received", newMessageReceived);
 		});
 	};
@@ -133,6 +144,10 @@ io.on("connection", (socket) => {
 		});
 	};
 
+	app.get("/stats/online", (_req, res) => {
+  res.json({ onlineCnt: onlineUsers.size, onlineIds: [...onlineUsers.keys()] });
+});
+
 	socket.on("setup", setupHandler);
 	socket.on("new message", newMessageHandler);
 	socket.on("join chat", joinChatHandler);
@@ -143,6 +158,14 @@ io.on("connection", (socket) => {
 	socket.on("chat created", chatCreateChatHandler);
 
 	socket.on("disconnect", () => {
+    /* 🔥 NEW —- remove socket from presence map */
+    if (socket.userId) {
+      // Remove only the *exact* socket that disconnected
+      const mappedSocketId = onlineUsers.get(socket.userId);
+      if (mappedSocketId === socket.id) {
+        onlineUsers.delete(socket.userId);
+        broadcastPresence();
+      }}
 		console.log("User disconnected:", socket.id);
 		socket.off("setup", setupHandler);
 		socket.off("new message", newMessageHandler);

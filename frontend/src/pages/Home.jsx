@@ -19,6 +19,8 @@ import {
 } from "../redux/slices/myChatSlice";
 import { toast } from "react-toastify";
 import { receivedSound } from "../utils/notificationSound";
+import { setOnlineUsers } from "../redux/slices/onlineUsersSlice";
+
 let selectedChatCompare;
 
 const Home = () => {
@@ -34,6 +36,12 @@ const Home = () => {
 		if (!authUserId) return;
 		socket.emit("setup", authUserId);
 		socket.on("connected", () => dispatch(setSocketConnected(true)));
+		socket.on("online-users", (list) => dispatch(setOnlineUsers(list)));
+		return () => {
+    		socket.off("online-users");
+    		socket.off("connected");
+    		socket.off("disconnect");
+  		};
 	}, [authUserId]);
 
 	// socket message received

@@ -17,6 +17,7 @@ import socket from "../../socket/socket";
 
 const GroupChatBox = () => {
 	const groupUser = useRef("");
+	const onlineUsers = useSelector((s) => s.onlineUsers);
 	const dispatch = useDispatch();
 	const isChatLoading = useSelector(
 		(store) => store?.condition?.isChatLoading
@@ -188,6 +189,8 @@ const GroupChatBox = () => {
 									</div>
 								)}
 								{selectedUsers?.map((user) => {
+									const chatUser = user?._id;
+                             const isOnline = onlineUsers.includes(chatUser);
 									return (
 										<div
 											key={user?._id}
@@ -202,6 +205,9 @@ const GroupChatBox = () => {
 												src={user?.image}
 												alt="img"
 											/>
+											<span  className={`h-2 w-2 rounded-full 
+                                                ${isOnline ? "bg-green-500" : "bg-gray-500"}`}/>
+                                           
 											<div className="w-full">
 												<span className="line-clamp-1 capitalize">
 													{user?.firstName}{" "}
