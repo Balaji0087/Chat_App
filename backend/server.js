@@ -97,11 +97,11 @@ io.on("connection", (socket) => {
 		chat?.users.forEach((user) => {
 			if (user._id === newMessageReceived.sender._id) return;
 			console.log("Message received by:", user._id);
-			const recipientSocketId = onlineUsers.get(user._id);
-      		if (recipientSocketId)
-        		io.to(recipientSocketId).emit("message received", msg);
 			socket.in(user._id).emit("message received", newMessageReceived);
-		});
+			// const recipientSocketId = onlineUsers.get(user._id);
+      		// if (recipientSocketId)
+        	// 	io.to(recipientSocketId).emit("message received", chat);
+			});
 	};
 
 	// Join a Chat Room and Typing effect

@@ -97,12 +97,19 @@ const MyChat = () => {
                                     />
                                     
                                     <div className="w-full">
-                                        <div className="flex justify-between items-center w-full">
+                                        <div className="flex items-center gap-2 grow min-w-0">
                                             <span  className={`h-2 w-2 rounded-full 
                                                 ${isOnline ? "bg-green-500" : "bg-gray-500"}`}/>
                                             <span className="line-clamp-1 capitalize">
                                                 {getChatName(chat, authUserId)}
                                             </span>
+                                             <span
+        className={`text-[10px] uppercase font-medium tracking-wide ${
+          isOnline ? "text-green-600" : "text-gray-500"
+        }`}
+      >
+        {isOnline ? "online" : "offline"}
+      </span>
                                             <span className="text-xs font-light ml-1">
                                                 {chat?.latestMessage &&
                                                     SimpleTime(
@@ -110,6 +117,7 @@ const MyChat = () => {
                                                             ?.createdAt
                                                     )}
                                             </span>
+                                           
                                         </div>
                                         <span className="text-xs font-light line-clamp-1 ">
                                             {chat?.latestMessage ? (
