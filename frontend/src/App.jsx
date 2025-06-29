@@ -43,37 +43,52 @@ const Applayout = () => {
         };
     }, []);
     return (
-        <div>
-            <ToastContainer
-                position={toastPosition}
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-                stacked
-                limit={3}
-                toastStyle={{
-                    border: "1px solid #dadadaaa",
-                    textTransform: "capitalize",
-                }}
-                // transition:Bounce
-            />
-            <Header />
-            <div className="h-16 md:h-20"></div>
-            <div className="min-h-[85vh] p-2 sm:p-4  bg-gradient-to-tr to-black via-blue-900 from-black">
-                <Outlet />
-                {isProfileDetails && <ProfileDetail />}
-                {isGroupChatBox && <GroupChatBox />}
-                {isNotificationBox && <NotificationBox />}
-            </div>
-            {isLoading && <Loading />}
-            <Footer />
+       <div className="fixed inset-0 flex flex-col bg-gradient-to-tr from-black via-blue-900 to-black">
+
+      {/* 🍞 toasts stay on top of everything */}
+      <ToastContainer
+        position={toastPosition}
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        stacked
+        limit={3}
+        toastStyle={{
+          border: "1px solid #dadadaaa",
+          textTransform: "capitalize",
+        }}
+      />
+
+      {/* 📌 sticky header – always visible */}
+      <Header className="sticky top-0 z-40" />
+
+      {/* reserve the exact header height so content starts below it */}
+      <div className="h-16 md:h-20 shrink-0" />
+
+      {/* 🖥️ main area: fills the rest of the window & scrolls independently */}
+      <main className="flex-1 overflow-y-auto p-2 sm:p-4 min-h-0">
+
+        {/* Outlet now owns the full space */}
+        <div className="h-full w-full">
+          <Outlet />
         </div>
+
+        {/* contextual overlays */}
+        {isProfileDetails  && <ProfileDetail />}
+        {isGroupChatBox    && <GroupChatBox />}
+        {isNotificationBox && <NotificationBox />}
+      </main>
+
+      {/* ⏳ loading overlay */}
+      {isLoading && <Loading />}
+      {/* <Footer /> */}
+    </div>
     );
 };
 const routers = createBrowserRouter([

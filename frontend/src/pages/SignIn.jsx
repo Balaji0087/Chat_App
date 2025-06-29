@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { addAuth } from "../redux/slices/authSlice";
 import { checkValidSignInFrom } from "../utils/validate";
 import { PiEye, PiEyeClosedLight } from "react-icons/pi";
+import Footer from "../components/Footer";
 
 const SignIn = () => {
 	const [email, setEmail] = useState("");
@@ -132,7 +133,9 @@ const SignIn = () => {
 					</div>
 				</form>
 			</div>
+			 <Footer />
 		</div>
+		
 	);
 };
 

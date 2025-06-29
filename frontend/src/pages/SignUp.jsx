@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { checkValidSignUpFrom } from "../utils/validate";
 import { PiEye, PiEyeClosedLight } from "react-icons/pi";
-
+import Footer from "../components/Footer";
 const SignUp = () => {
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
@@ -153,6 +153,7 @@ const SignUp = () => {
 					</div>
 				</form>
 			</div>
+			 <Footer />
 		</div>
 	);
 };
