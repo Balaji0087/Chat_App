@@ -164,7 +164,7 @@ const MessageSend = ({ chatId }) => {
 					{isSendLoading && (
 						<button className="outline-none p-2 border-slate-500 border-l">
 							<LuLoader
-								title="loading..."
+								title="loading..." 
 								fontSize={18}
 								className="animate-spin"
 							/>
